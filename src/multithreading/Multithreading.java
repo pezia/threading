@@ -19,7 +19,7 @@ public class Multithreading {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, ExecutionException {
-        doThreads();
+        doDeadlock();
     }
 
     private static void doCallable() throws InterruptedException, ExecutionException {
@@ -79,6 +79,29 @@ public class Multithreading {
         list.stream().forEach((elem) -> System.out.println(elem));
 
         System.out.println(list.size());
+    }
+
+    private static void doDeadlock() throws InterruptedException {
+        String hello = "Hello";
+        String world = "World";
+
+        Deadlocker deadlocker1 = new Deadlocker(hello, world);
+        Deadlocker deadlocker2 = new Deadlocker(world, hello);
+
+        Thread thread1 = new Thread(deadlocker1);
+        Thread thread2 = new Thread(deadlocker2);
+
+        thread1.start();
+        thread2.start();
+
+        Thread.sleep(1000);
+
+        System.out.println("Waiting for the threads to finish (they will not, kill the application manually!)");
+
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(1000);
+            System.out.print(".");
+        }
     }
 
 }
